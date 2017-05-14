@@ -1,0 +1,8 @@
+{
+  "name": "chatter the chatting aap",
+  "version": "0.0.0.1",
+  "description": "chat box assingment",
+  "dependencies": {
+    "socket.io": "^2.0.1"
+  }
+}

@@ -11,17 +11,21 @@
 	padding: 5px;
 	border-radius: 10%;
 	border-top: 5px;
+	height: 4%;
 }
 form input{
 	font: sans-serif;
 	font-family: times;
 	width: 90%;
+    height: 100%;
 	padding-right: 10px;
+
 	border-color: #00BFFF ;
 
 }
 form button{
 	width: 10%;
+    
 	position: fixed;
 	background-color: #8A2BE2;
 
@@ -40,9 +44,14 @@ form button{
 <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 <script  type="text/javascript" src="/js/main.js"></script>
 <script >
-	 $(function () {
+
+
+	 $(function () {	
     var socket = io();
+
+ // emits message when form is  submitted   
     $('form').submit(function(){
+      
       socket.emit('chat message', $('#name').val() ,$('#m').val());
       $('#m').val('');
    
@@ -52,22 +61,36 @@ form button{
     });
 
 
+    //user typing feature
+
+   
+
+// recives messages emited by server
     socket.on('chat message', function(user,msg){
     	$('#messages').append($	('<li>').text(user + ': ' + msg));
     });
-    socket.on('disconnected',function(username){
-    	$('#messages').append($	('<li>').text(user + ' disconnected'));
+     socket.on('connected', function(username){
+    	$('#messages').append($	('<li>').text(username+ ' connected'));
     });
+    socket.on('disconnected', function(username){
+    	$('#messages').append($	('<li>').text(username+ ' disconnected'));
+    });
+
   });
 </script>
 </head>
 <body>
-Name : <input id="name" autocomplete="off" value="user" />
+<div id="firstpage">
+Enter your name
+ <input id="name" autocomplete="off" placeholder="enter your name" />
+ </div>
+ <div id="mainpage">
 <ul id="messages" >
 	
 </ul>
 <form id="bottom" action="">
-    <input id="m" autocomplete="off" /><button>Send</button>
+    <input id="m" autocomplete="off" placeholder="type here" /><button>Send</button>
 </form>
+</div>
 </body>
 </html>

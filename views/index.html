@@ -2,25 +2,33 @@
 <html>
 <head>
 	<title>Chhating App</title>
-<link rel="stylesheet" type="text/css" href="style.css">
-<script src="/socket.io/socket.io.js"></script>
-<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-<script  type="text/javascript" src="main.js"></script>
 
-
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+	<script  type="text/javascript" src="main.js"></script>
+	
 </head>
+
 <body>
+
 <div id="firstpage">
-Enter your name
- <input id="name" autocomplete="off" placeholder="enter your name" />
+<h3 >Enter your name</h3>
+
+ <input id="name_input" autocomplete="off" placeholder="enter your name" >
+
  </div>
+
  <div id="mainpage">
 <ul id="messages" >
 	
 </ul>
 <form id="bottom" action="">
-    <input id="m" autocomplete="off" placeholder="type here" /><button>Send</button>
+    <input id="message_input" autocomplete="off" placeholder="type here" /><button>Send</button>
 </form>
+
 </div>
+
 </body>
+
 </html>

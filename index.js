@@ -1,15 +1,19 @@
+var express = require('express');
+
 var app = require('express')();
+
 var http = require('http').Server(app);
 var IO = require('socket.io')(http);
 
-app.get('/',function (req,res){
+app.use(express.static(__dirname + '/views'));
+/*app.get('/',function (req,res){
 
         
-		res.sendFile(__dirname + '/views/index.html');
+		res.sendFile(__dirname + '/views');
 
-});
+});*/
 
-var username = "user";
+var username = "user";	
 
 IO.on('connection',function(socket){
 	console.log('a user is connected');

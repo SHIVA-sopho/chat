@@ -25,6 +25,12 @@ html{
 	top: 40%;
 	right: 45%;
 }
+#usernameErr{
+	position: absolute;
+	top: 30%;
+	right: 45%;
+	color: white;
+}
 form{
 	position: fixed;
 	bottom: 0;

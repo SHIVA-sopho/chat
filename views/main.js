@@ -3,32 +3,49 @@ $(function () {
     var $window = $('window');
     var $firstpage = $('#firstpage');
     var $name_input = $('#name_input');
+    var $usernameErr = $('#usernameErr');
     var $mainpage = $('#mainpage');
     var $messages = $('#messages'); // messages log
     var $message_input = $('#message_input');//messages
+    var $message_form = $('#message_form'); // form to be submitted for sending a message
     var socket = io();
 
-    var username ;
-
+var username;
+// It is a function which is used to set username
 function set_user()
 {
   console.log("set_user called");
   username = $name_input.val();
-  console.log($name_input.val());
+  console.log(username);
+
   if(username)
   {
-    $firstpage.fadeOut();
-    $mainpage.show();
+    socket.emit('new_user_connected',username ,function(data){
+      if(data)
+      {
+        $firstpage.fadeOut();
+        $mainpage.show();
+        $name_input.off('click');
+        $name_input.val('');
+        $name_input.trigger('blur');
+
+      }
+      else
+      {
+        $name_input.val('');
+
+        $usernameErr.html("user name already exists"); 
+
+      }
+
+    });
+
   }
-  
-  socket.emit('new_user_connected',username);
-  $name_input.off('click');
+   
 }
 
     
-
-
-
+ // seting up new user
  $('#name_input').keypress(function(event){
 
 console.log("key down worked");
@@ -39,24 +56,26 @@ console.log("key down worked");
   }
  });
 
+
  // emits message when form is  submitted   
     $('form').submit(function(){
-      
-      socket.emit('chat message', $('#name').val() ,$('#m').val());
-      $('#m').val('');
-   
-      
-
+       console.log("form submitted");
+     var message = $('#message_input').val();
+      console.log(message);
+      socket.emit('chat message', message);
+      $('#message_input').val('');
       return false;
+   
     });
 
 
-    //user typing feature
-
+    
    
 
 // recives messages emited by server
-    socket.on('chat message', function(user,msg){
+    socket.on('chat message',function(user,msg){
+
+      console.log(user + ':' + msg);
     	$('#messages').append($	('<li>').text(user + ': ' + msg));
     });
      socket.on('connected', function(username){

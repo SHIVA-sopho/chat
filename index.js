@@ -12,25 +12,50 @@ app.use(express.static(__dirname + '/views'));
 		res.sendFile(__dirname + '/views');
 
 });*/
-
-var username = "user";	
+	
+var usernames = [];
+var numberOfUsers =0;
 
 IO.on('connection',function(socket){
 	console.log('a user is connected');
-	socket.broadcast.emit('connected', socket.username);
+	
 	socket.on('disconnect',function(){
-		console.log(username + ' disconnected');
+		console.log(socket.username + ' disconnected');
+		if(socket.username)
 		socket.broadcast.emit('disconnected', socket.username);
+
+	});
+
+
+    // checks new uer  connected if alredy presnt or not
+	socket.on('new_user_connected',function(username,callback){
+		console.log('new_user_connected and his name is ' + username);
+		if(usernames.indexOf(username ) != -1)
+		{
+			console.log('user already present');
+			callback(false);
+		}
+		else{
+			console.log('call back true');
+			
+			numberOfUsers++;
+	    	socket.username = username;
+	   		usernames.push(username);
+	   		socket.broadcast.emit('connected', socket.username);
+	   		//socket.emit('update_users',usernames);
+	   		callback(true);
+
+		}
+    
 
 	});
 	
    // recives the message from client
-	socket.on('chat message',function(user,msg){
-		//console.log('message: '+msg);
- 		username = user;
- 		socket.username = user;
+	socket.on('chat message',function(message){
+		//console.log('message: '+message);
  		// broad casts the message to other clients
-		socket.broadcast.emit('chat message', user,msg);
+
+		socket.broadcast.emit('chat message',socket.username,message);
 	});
 
    // user typing broadcast

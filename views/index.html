@@ -4,9 +4,6 @@
 	<title>Chhating App</title>
 
 	<link rel="stylesheet" type="text/css" href="style.css">
-	<script src="/socket.io/socket.io.js"></script>
-	<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-	<script  type="text/javascript" src="main.js"></script>
 	
 </head>
 
@@ -16,7 +13,7 @@
 <h3 >Enter your name</h3>
 
  <input id="name_input" autocomplete="off" placeholder="enter your name" >
-
+<div id="usernameErr"></div>
  </div>
 
  <div id="mainpage">
@@ -30,5 +27,7 @@
 </div>
 
 </body>
-
+<script src="/socket.io/socket.io.js"></script>
+	<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+	<script  type="text/javascript" src="main.js"></script>
 </html>

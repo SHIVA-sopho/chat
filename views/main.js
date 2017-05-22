@@ -8,6 +8,7 @@ $(function () {
     var $messages = $('#messages'); // messages log
     var $message_input = $('#message_input');//messages
     var $message_form = $('#message_form'); // form to be submitted for sending a message
+    var $users = $('#users'); // keeps track of whio all are online
     var socket = io();
 
 var username;
@@ -59,30 +60,36 @@ console.log("key down worked");
 
  // emits message when form is  submitted   
     $('form').submit(function(){
-       console.log("form submitted");
+      
      var message = $('#message_input').val();
-      console.log(message);
-      socket.emit('chat message', message);
-      $('#message_input').val('');
-      return false;
+     socket.emit('chat message', message);
+     $('#message_input').val('');
+     return false;
    
     });
 
-
-    
+  
    
 
 // recives messages emited by server
     socket.on('chat message',function(user,msg){
 
-      console.log(user + ':' + msg);
-    	$('#messages').append($	('<li>').text(user + ': ' + msg));
-    });
-     socket.on('connected', function(username){
-    	$('#messages').append($	('<li>').text(username+ ' connected'));
-    });
-    socket.on('disconnected', function(username){
-    	$('#messages').append($	('<li>').text(username+ ' disconnected'));
+      //console.log(user + ':' + msg);
+    	$messages.append($	('<li>').text(user + ': ' + msg));
     });
 
+     socket.on('connected', function(username){
+    	$messages.append($	('<li>').text(username+ ' connected'));
+      $users.append($ ('<li id='+username+'>').text(username));
+    });
+
+    socket.on('disconnected', function(username){
+    	$messages.append($('<li>').text(username+ ' disconnected'));
+      var $elem = $('#' +username);
+      $elem.remove();
+    });
+
+
+
+      
   });

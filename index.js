@@ -21,8 +21,12 @@ IO.on('connection',function(socket){
 	
 	socket.on('disconnect',function(){
 		console.log(socket.username + ' disconnected');
+
 		if(socket.username)
-		socket.broadcast.emit('disconnected', socket.username);
+			socket.broadcast.emit('disconnected', socket.username);
+
+		var index = usernames.indexOf(socket.username);
+		usernames.splice(index,1);
 
 	});
 
@@ -41,8 +45,8 @@ IO.on('connection',function(socket){
 			numberOfUsers++;
 	    	socket.username = username;
 	   		usernames.push(username);
-	   		socket.broadcast.emit('connected', socket.username);
-	   		//socket.emit('update_users',usernames);
+	   		socket.broadcast.emit('connected', username);
+	   		socket.emit('update_users',username);
 	   		callback(true);
 
 		}

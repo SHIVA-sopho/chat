@@ -15,7 +15,6 @@ var username;
 // It is a function which is used to set username
 function set_user()
 {
-  console.log("set_user called");
   username = $name_input.val();
   console.log(username);
 
@@ -29,6 +28,15 @@ function set_user()
         $name_input.off('click');
         $name_input.val('');
         $name_input.trigger('blur');
+        var len = data.length; // gives the length of the array
+
+        for(i = 0 ; i < len; i++)
+        {
+        if(data[i]===username)
+          continue;  
+        $users.append($ ('<li id='+data[i]+'>').text(data[i]));
+        }
+
 
       }
       else
@@ -62,7 +70,22 @@ console.log("key down worked");
     $('form').submit(function(){
       
      var message = $('#message_input').val();
+     var msg = message.trim();
+    
+     if(msg.substr(0,4) === '/pm ')
+     {
+      console.log('its a private message');
+       message = message.substr(4);
+       console.log(message);
+      socket.emit('pvt msg',message,function(data){
+      $messages.append($  ('<li class="err">').text(data));  
+          
+      });
+
+     }
+     else{
      socket.emit('chat message', message);
+   }
      $('#message_input').val('');
      return false;
    
@@ -75,19 +98,25 @@ console.log("key down worked");
     socket.on('chat message',function(user,msg){
 
       //console.log(user + ':' + msg);
-    	$messages.append($	('<li>').text(user + ': ' + msg));
+    	$messages.append($	('<li class="gen_message">').text(user + ': ' + msg));
     });
 
      socket.on('connected', function(username){
-    	$messages.append($	('<li>').text(username+ ' connected'));
-      $users.append($ ('<li id='+username+'>').text(username));
+    	$messages.append($	('<li >').text(username+ ' connected'));
+      $users.append($ ('<li id='+username+'>').text(username)); // idname same as username helps to identify the element
     });
 
     socket.on('disconnected', function(username){
-    	$messages.append($('<li>').text(username+ ' disconnected'));
-      var $elem = $('#' +username);
+    	$messages.append($('<li >').text(username+ ' disconnected'));
+      var $elem = $('#' +username); 
       $elem.remove();
     });
+
+    socket.on('pvt msg',function(user,msg){
+      console.log('pvt_message recived');
+      $messages.append($ ('<li class="pvt_message">').text(user+ ':' + msg));
+    });
+
 
 
 

@@ -11,22 +11,28 @@ app.use(express.static(__dirname + '/views'));
         
 		res.sendFile(__dirname + '/views');
 
-});*/
+});*/ 
 	
-var usernames = [];
+var users = {};
 var numberOfUsers =0;
 
 IO.on('connection',function(socket){
 	console.log('a user is connected');
-	
+	if(socket.username)
+	{
+		socket.broadcast.emit('disconnected', socket.username);
+			delete  users[socket.username];
+			numberOfUsers--;
+	}
 	socket.on('disconnect',function(){
 		console.log(socket.username + ' disconnected');
 
 		if(socket.username)
+		{
 			socket.broadcast.emit('disconnected', socket.username);
-
-		var index = usernames.indexOf(socket.username);
-		usernames.splice(index,1);
+			delete  users[socket.username];
+			numberOfUsers--;
+		}
 
 	});
 
@@ -34,21 +40,18 @@ IO.on('connection',function(socket){
     // checks new uer  connected if alredy presnt or not
 	socket.on('new_user_connected',function(username,callback){
 		console.log('new_user_connected and his name is ' + username);
-		if(usernames.indexOf(username ) != -1)
+		if(username in users )
 		{
 			console.log('user already present');
 			callback(false);
 		}
 		else{
-			console.log('call back true');
-			
+			console.log('he is really a new user');
 			numberOfUsers++;
 	    	socket.username = username;
-	   		usernames.push(username);
+	    	users[socket.username] = socket;   // saving my socket here for private messaging
 	   		socket.broadcast.emit('connected', username);
-	   		socket.emit('update_users',username);
-	   		callback(true);
-
+	   		callback(Object.keys(users));
 		}
     
 
@@ -58,11 +61,35 @@ IO.on('connection',function(socket){
 	socket.on('chat message',function(message){
 		//console.log('message: '+message);
  		// broad casts the message to other clients
-
 		socket.broadcast.emit('chat message',socket.username,message);
 	});
 
-   // user typing broadcast
+
+   socket.on('pvt msg',function(message,callback){
+
+   	var user = message.trim();
+   	var index  = user.indexOf(' ');
+   	console.log(index);
+   	if(index != -1)
+   	{
+	   	user = user.substr(0,index);
+	   	console.log(user);
+	   	message = message.substr(index+1);
+	   	console.log(message);
+	   	if(user in users)
+	   	{
+	   		(users[user]).emit('pvt msg',socket.username,message);
+	   	}
+	   	else
+	   	{
+	   		callback('error! please enter a valid user');
+	   	}
+	}
+	else{
+		callback('error! please enter some message');
+	}
+
+   });
   
 
 });

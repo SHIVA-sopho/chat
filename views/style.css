@@ -40,6 +40,11 @@ html{
 	border-left: solid;
 	border-color: black;
 }
+#messages{
+	position: absolute;
+	width: 78%;
+	left: 0%;
+}
 form{
 	position: fixed;
 	bottom: 0;
@@ -74,5 +79,15 @@ form button{
 #messages li:nth-child(odd) {
 	background:  #eee;
 }
-
+.pvt_message{
+	color: blue;
+	font-style: italic;
+}
+.err{
+	color: red;
+	font-style: bold;
+}
+.gen_message{
+	color: black;
+}
 

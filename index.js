@@ -59,8 +59,7 @@ IO.on('connection',function(socket){
 	
    // recives the message from client
 	socket.on('chat message',function(message){
-		//console.log('message: '+message);
- 		// broad casts the message to other clients
+	
 		socket.broadcast.emit('chat message',socket.username,message);
 	});
 

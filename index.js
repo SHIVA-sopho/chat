@@ -20,18 +20,20 @@ IO.on('connection',function(socket){
 	console.log('a user is connected');
 	if(socket.username)
 	{
-		socket.broadcast.emit('disconnected', socket.username);
-			delete  users[socket.username];
-			numberOfUsers--;
+		console.log("page refreshed");
+		delete  users[socket.username];
+		numberOfUsers--;
+		socket.broadcast.emit('disconnected', socket.username);	
 	}
 	socket.on('disconnect',function(){
 		console.log(socket.username + ' disconnected');
 
 		if(socket.username)
 		{
-			socket.broadcast.emit('disconnected', socket.username);
+			
 			delete  users[socket.username];
 			numberOfUsers--;
+			socket.broadcast.emit('disconnected', socket.username);
 		}
 
 	});

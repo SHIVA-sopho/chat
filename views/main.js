@@ -12,6 +12,30 @@ $(function () {
     var socket = io();
 
 var username;
+var no_of_popups = 0;
+var popups  =  [];
+
+//creates popups
+function create_popup(userid)
+{
+  var len = popups.length;
+    for(var i=0;i < len;i++)
+    {
+
+      if(userid === popups[i])
+      {
+        popups.splice(i,1);
+        popups.unshift(userid); //puts an element at the start of array
+        diplay_popups();
+      }
+
+      
+
+    }
+}
+
+
+
 // It is a function which is used to set username
 function set_user()
 {
@@ -34,7 +58,9 @@ function set_user()
         {
         if(data[i]===username)
           continue;  
-        $users.append($ ('<li id='+data[i]+'>').text(data[i]));
+        console.log(i+' '+data[i]);
+        $users.append($ ('<li id='+data[i]+'>').append($('<a href="javascript:create_popup()">').text('1' + data[i])));
+        //$users.append($ ('<li id='+data[i]+'>').html('<a href="javascript:create_chatbox('+data[i]+');">'+data[i])+'</a>' );
         }
 
 
@@ -103,7 +129,9 @@ console.log("key down worked");
 
      socket.on('connected', function(username){
     	$messages.append($	('<li >').text(username+ ' connected'));
-      $users.append($ ('<li id='+username+'>').text(username)); // idname same as username helps to identify the element
+      $users.append($ ('<li id='+username+'>').append($('<a href="javascript:create_chatbox()">').text(2+' '+username)));
+
+      //$users.append($ ('<li id='+username+'>').text(username)); // idname same as username helps to identify the element
     });
 
     socket.on('disconnected', function(username){
